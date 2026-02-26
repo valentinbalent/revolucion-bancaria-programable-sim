@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "revolucion-bancaria-programable-sim"
+version = "0.1.0"
+description = "ABM/DE (SimPy) simulation for the Revolución Bancaria Programable thesis — reproducible A/B with CRN."
+readme = "README.md"
+requires-python = ">=3.9"
+license = {file = "LICENSE"}
+authors = [{name = "Valentín Balent"}]
+dependencies = [
+  "numpy>=2.0",
+  "pandas>=2.2",
+  "simpy>=4.1",
+  "networkx>=3.2",
+  "scipy>=1.10",
+  "matplotlib>=3.8",
+  "orjson>=3.10",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+  "ruff>=0.6",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]

@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "Revolución Bancaria Programable — Simulation (ABM/DE)"
+authors:
+  - family-names: "Balent"
+    given-names: "Valentín"
+year: 2026
+version: 0.1.0
+license: MIT
+repository-code: "https://github.com/valentinbalent/revolucion-bancaria-programable-sim"
+abstract: "Research simulation code for an ABM/DE (SimPy) A/B experiment with CRN and reproducible artifacts."
