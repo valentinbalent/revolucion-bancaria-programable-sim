@@ -11,6 +11,7 @@ import os
 import platform
 import subprocess
 import sys
+from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 from revolucion_bancaria_programable_sim.config import build_config, stable_hash_dict
@@ -20,13 +21,40 @@ from revolucion_bancaria_programable_sim.model_de import DESim, qa_gates
 from revolucion_bancaria_programable_sim.rng import CRN
 
 
-def compute_code_hash(paths: List[str]) -> str:
+def get_code_paths() -> list[str]:
+    """Files that define the executable experiment (for reproducibility hashing)."""
+    import revolucion_bancaria_programable_sim as pkg
+
+    pkg_dir = Path(pkg.__file__).resolve().parent
+    paths = [
+        pkg_dir / "__init__.py",
+        pkg_dir / "config.py",
+        pkg_dir / "rng.py",
+        pkg_dir / "model_abm.py",
+        pkg_dir / "model_de.py",
+        pkg_dir / "metrics.py",
+        Path("scripts/run_experiment.py"),
+        Path("scripts/aggregate_results.py"),
+        Path("pyproject.toml"),
+    ]
+    return [str(p) for p in paths if Path(p).exists()]
+
+def compute_code_hash(paths: list[str]) -> str:
+    import hashlib
+
     h = hashlib.sha256()
-    for p in sorted(paths):
-        if not os.path.exists(p):
-            continue
-        with open(p, "rb") as f:
-            h.update(f.read())
+
+    def add_file(fp: Path) -> None:
+        h.update(fp.read_bytes())
+
+    for raw in sorted(set(paths)):
+        p = Path(raw)
+        if p.is_dir():
+            for fp in sorted(p.rglob("*.py")):
+                add_file(fp)
+        elif p.is_file():
+            add_file(p)
+
     return h.hexdigest()
 
 
