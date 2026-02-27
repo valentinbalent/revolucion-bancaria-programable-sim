@@ -8,6 +8,9 @@ import csv
 import hashlib
 import json
 import os
+import platform
+import subprocess
+import sys
 from typing import Any, Dict, List, Tuple
 
 from revolucion_bancaria_programable_sim.config import build_config, stable_hash_dict
@@ -30,6 +33,30 @@ def compute_code_hash(paths: List[str]) -> str:
 def ensure_dir(p: str) -> None:
     os.makedirs(p, exist_ok=True)
 
+
+
+
+def get_git_commit() -> str:
+    try:
+        out = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+        return out
+    except Exception:
+        return "UNKNOWN"
+
+
+def is_git_dirty() -> bool:
+    try:
+        out = subprocess.check_output(["git", "status", "--porcelain"], text=True)
+        return bool(out.strip())
+    except Exception:
+        return False
+
+
+def get_runtime_env() -> dict:
+    return {
+        "python_version": sys.version.split()[0],
+        "platform": platform.platform(),
+    }
 
 def write_csv(path: str, rows: List[Dict[str, Any]]) -> None:
     ensure_dir(os.path.dirname(path))
@@ -61,21 +88,24 @@ def write_json(path: str, obj: Any) -> None:
         json.dump(obj, f, indent=2, sort_keys=True)
 
 
-def make_run_id(cfg: Dict[str, Any], scenario: str, seed: int, world: str, theta_hash: str, code_hash: str) -> str:
-    salt = cfg["repro"].get("run_id_salt", "")
-    s = f"{salt}|{scenario}|{seed}|{world}|{theta_hash}|{code_hash}"
-    return hashlib.sha256(s.encode("utf-8")).hexdigest()[:16]
+
+def make_run_id(cfg: dict, scenario: str, seed: int, world: str, theta_hash: str, code_hash: str) -> str:
+    salt = cfg.get("repro", {}).get("run_id_salt", "")
+    git_commit = cfg.get("repro", {}).get("git_commit") or "UNKNOWN"
+    payload = f"{salt}|{scenario}|{seed}|{world}|{theta_hash}|{git_commit}|{code_hash}"
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:16]
 
 
 def config_used_payload(
-    cfg: Dict[str, Any],
+    cfg: dict,
     scenario: str,
     seed: int,
     world: str,
     theta_hash: str,
     code_hash: str,
     run_id: str,
-) -> Dict[str, Any]:
+) -> dict:
+    repro = cfg.get("repro", {})
     return {
         "run_id": run_id,
         "scenario": scenario,
@@ -83,12 +113,14 @@ def config_used_payload(
         "world": world,
         "theta_hash": theta_hash,
         "code_hash": code_hash,
+        "git_commit": repro.get("git_commit", "UNKNOWN"),
+        "git_dirty": bool(repro.get("git_dirty", False)),
+        "runtime": repro.get("runtime", {}),
         "spec": cfg["meta"]["spec"],
         "ifs_components": cfg["meta"]["ifs_components"],
         "flows": cfg["meta"]["flows"],
         "config": cfg,
     }
-
 
 def run_single(cfg: Dict[str, Any], scenario: str, seed: int, world: str, runs_root: str, agent_snapshot: bool) -> Dict[str, Any]:
     crn = CRN(base_seed=seed)
@@ -100,7 +132,18 @@ def run_single(cfg: Dict[str, Any], scenario: str, seed: int, world: str, runs_r
     cfg_run = json.loads(json.dumps(cfg))
     cfg_run["params"]["p_adopt"] = 0.0 if world == "A" else 1.0
 
+    cfg_run.setdefault("repro", {})
+    cfg_run["repro"]["git_commit"] = get_git_commit()
+    cfg_run["repro"]["git_dirty"] = is_git_dirty()
+    cfg_run["repro"]["runtime"] = get_runtime_env()
+
     theta_hash = stable_hash_dict(cfg_run["params"])
+
+    cfg_run.setdefault('repro', {})
+    cfg_run['repro']['git_commit'] = get_git_commit()
+    cfg_run['repro']['git_dirty'] = is_git_dirty()
+    cfg_run['repro']['runtime'] = get_runtime_env()
+
 
     # Hash only our package modules + this runner for provenance
     code_hash = compute_code_hash(

@@ -1,0 +1,266 @@
+{
+  "ifs": {
+    "IFS_total": 0.2096370219585622,
+    "IFS_total_100": 20.96370219585622,
+    "flows": {
+      "DVP": {
+        "IFS": 0.23695010572311526,
+        "IFS_100": 23.695010572311524,
+        "Z_norm": {
+          "C": 0.06,
+          "D": 0.3,
+          "F": 0.9133565697431283,
+          "L": 0.3680722437440121,
+          "Q": 0.0,
+          "R": 0.0
+        },
+        "Z_raw": {
+          "C": 0.6,
+          "D": 3.0,
+          "F": 4.566782848715642,
+          "L": 18.403612187200604,
+          "Q": 0.0,
+          "R": 0.0
+        },
+        "weights_used": {
+          "w_C": 0.2,
+          "w_D": 0.2,
+          "w_F": 0.1,
+          "w_L": 0.2,
+          "w_Q": 0.2,
+          "w_R": 0.1
+        }
+      },
+      "PVP": {
+        "IFS": 0.2228224443710176,
+        "IFS_100": 22.28224443710176,
+        "Z_norm": {
+          "C": 0.06278772052513967,
+          "D": 0.3,
+          "F": 0.8121835453337949,
+          "L": 0.342505455935778,
+          "Q": 0.0,
+          "R": 0.005454545454545454
+        },
+        "Z_raw": {
+          "C": 0.6278772052513967,
+          "D": 3.0,
+          "F": 4.060917726668975,
+          "L": 17.125272796788902,
+          "Q": 0.0,
+          "R": 0.02727272727272727
+        },
+        "weights_used": {
+          "w_C": 0.2,
+          "w_D": 0.2,
+          "w_F": 0.1,
+          "w_L": 0.2,
+          "w_Q": 0.2,
+          "w_R": 0.1
+        }
+      },
+      "XBPAY": {
+        "IFS": 0.17926314232580587,
+        "IFS_100": 17.926314232580587,
+        "Z_norm": {
+          "C": 0.06359309971309247,
+          "D": 0.302093023255814,
+          "F": 0.5736069758838697,
+          "L": 0.24312842629958328,
+          "Q": 0.0,
+          "R": 0.0013953488372093023
+        },
+        "Z_raw": {
+          "C": 0.6359309971309247,
+          "D": 3.0209302325581397,
+          "F": 2.868034879419348,
+          "L": 12.156421314979164,
+          "Q": 0.0,
+          "R": 0.0069767441860465115
+        },
+        "weights_used": {
+          "w_C": 0.2,
+          "w_D": 0.2,
+          "w_F": 0.1,
+          "w_L": 0.2,
+          "w_Q": 0.2,
+          "w_R": 0.1
+        }
+      }
+    }
+  },
+  "kpis": {
+    "aux": {
+      "availability": 1.0,
+      "recovery_time_total": 0.0,
+      "throughput_drop_total": 0.0
+    },
+    "flows": {
+      "DVP": {
+        "AtomicityViolationRate": 0.0,
+        "FinalityFailureRate": 0.0,
+        "K1_hold_mean": 0.12903225806451613,
+        "K1_latency_median": 8.070617939588892,
+        "K1_latency_p90": 22.83203829331991,
+        "K1_queue_mean": 0.0,
+        "K1_repair_mean": 0.0,
+        "K2_cost_total_mean": 1.0,
+        "K2_fee_mean": 1.0,
+        "K2_ops_proxy_mean": 0.0,
+        "K3_coll_lock_exposure_mean": 0.0,
+        "K3_liq_lock_exposure_mean": 0.0,
+        "K3_lock_exposure_total_mean": 0.0,
+        "K4_checkpoints_mean": 6.0,
+        "K4_repair_due_missing_rate": 0.0,
+        "K4_rescreen_rate": 0.0,
+        "K5_availability": 1.0,
+        "K5_op_fail_rate": 0.0,
+        "K5_recovery_time": 0.0,
+        "K5_throughput_drop": 0.0,
+        "K6_cycle_time_p90": 22.83203829331991,
+        "K6_fail_rate": 0.0,
+        "K6_multi_ccy_liq_req_mean": 0.0,
+        "K6_spread_proxy": 0.0012506335055306552,
+        "STP_rate": 0.967741935483871,
+        "fx_share": 0.16129032258064516,
+        "trace_score_mean": 0.8045231484177636
+      },
+      "PVP": {
+        "AtomicityViolationRate": 0.06060606060606061,
+        "FinalityFailureRate": 0.09090909090909091,
+        "K1_hold_mean": 0.07272727272727272,
+        "K1_latency_median": 10.026875871140685,
+        "K1_latency_p90": 20.167442907781,
+        "K1_queue_mean": 0.0,
+        "K1_repair_mean": 0.6969301312849184,
+        "K2_cost_total_mean": 1.0696930131284919,
+        "K2_fee_mean": 1.0,
+        "K2_ops_proxy_mean": 0.06969301312849185,
+        "K3_coll_lock_exposure_mean": 0.0,
+        "K3_liq_lock_exposure_mean": 0.0,
+        "K3_lock_exposure_total_mean": 0.0,
+        "K4_checkpoints_mean": 6.0,
+        "K4_repair_due_missing_rate": 0.0,
+        "K4_rescreen_rate": 0.0,
+        "K5_availability": 1.0,
+        "K5_op_fail_rate": 0.09090909090909091,
+        "K5_recovery_time": 0.0,
+        "K5_throughput_drop": 0.0,
+        "K6_cycle_time_p90": 20.167442907781,
+        "K6_fail_rate": 0.09090909090909091,
+        "K6_multi_ccy_liq_req_mean": 0.0,
+        "K6_spread_proxy": 0.0005213928001584528,
+        "STP_rate": 0.9090909090909091,
+        "fx_share": 0.0,
+        "trace_score_mean": 0.8137828051916981
+      },
+      "XBPAY": {
+        "AtomicityViolationRate": 0.0,
+        "FinalityFailureRate": 0.023255813953488372,
+        "K1_hold_mean": 0.18604651162790697,
+        "K1_latency_median": 7.1491105718303345,
+        "K1_latency_p90": 14.30241163347152,
+        "K1_queue_mean": 2.441860465116279,
+        "K1_repair_mean": 0.20060050966846607,
+        "K2_cost_total_mean": 1.0898274928273117,
+        "K2_fee_mean": 1.0,
+        "K2_ops_proxy_mean": 0.08982749282731173,
+        "K3_coll_lock_exposure_mean": 0.0,
+        "K3_liq_lock_exposure_mean": 0.0,
+        "K3_lock_exposure_total_mean": 0.0,
+        "K4_checkpoints_mean": 6.0,
+        "K4_repair_due_missing_rate": 0.06976744186046512,
+        "K4_rescreen_rate": 0.0,
+        "K5_availability": 1.0,
+        "K5_op_fail_rate": 0.023255813953488372,
+        "K5_recovery_time": 0.0,
+        "K5_throughput_drop": 0.0,
+        "K6_cycle_time_p90": 14.30241163347152,
+        "K6_fail_rate": 0.023255813953488372,
+        "K6_multi_ccy_liq_req_mean": 0.0,
+        "K6_spread_proxy": 0.0019193617966580514,
+        "STP_rate": 0.8604651162790697,
+        "fx_share": 0.7209302325581395,
+        "trace_score_mean": 0.782359322116826
+      }
+    },
+    "scenario": "S0",
+    "world": "A"
+  },
+  "no_inferiority": {
+    "flows": {
+      "DVP": {
+        "NI-1": {
+          "AtomicityViolationRate": 0.0,
+          "FinalityFailureRate": 0.0,
+          "pass": true,
+          "\u0394_NI_fin_f": 0.02,
+          "\u03b5_atomic_f": 0.001
+        },
+        "NI-2": {
+          "RecoveryTime": 0.0,
+          "ThroughputDrop": 0.0,
+          "pass": true,
+          "\u0394_NI_ops_f": 0.2,
+          "\u0394_NI_rec_f": 20.0
+        },
+        "NI-3": {
+          "backlog_ratio": 0.032258064516129004,
+          "hold_rate": 0.032258064516129004,
+          "pass": false,
+          "trace_score": 0.8045231484177636,
+          "\u0394_NI_backlog_f": 0.1,
+          "\u0394_NI_trace_f": 0.05
+        }
+      },
+      "PVP": {
+        "NI-1": {
+          "AtomicityViolationRate": 0.06060606060606061,
+          "FinalityFailureRate": 0.09090909090909091,
+          "pass": false,
+          "\u0394_NI_fin_f": 0.02,
+          "\u03b5_atomic_f": 0.001
+        },
+        "NI-2": {
+          "RecoveryTime": 0.0,
+          "ThroughputDrop": 0.0,
+          "pass": true,
+          "\u0394_NI_ops_f": 0.2,
+          "\u0394_NI_rec_f": 20.0
+        },
+        "NI-3": {
+          "backlog_ratio": 0.09090909090909094,
+          "hold_rate": 0.09090909090909094,
+          "pass": false,
+          "trace_score": 0.8137828051916981,
+          "\u0394_NI_backlog_f": 0.1,
+          "\u0394_NI_trace_f": 0.05
+        }
+      },
+      "XBPAY": {
+        "NI-1": {
+          "AtomicityViolationRate": 0.0,
+          "FinalityFailureRate": 0.023255813953488372,
+          "pass": false,
+          "\u0394_NI_fin_f": 0.02,
+          "\u03b5_atomic_f": 0.001
+        },
+        "NI-2": {
+          "RecoveryTime": 0.0,
+          "ThroughputDrop": 0.0,
+          "pass": true,
+          "\u0394_NI_ops_f": 0.2,
+          "\u0394_NI_rec_f": 20.0
+        },
+        "NI-3": {
+          "backlog_ratio": 0.13953488372093026,
+          "hold_rate": 0.13953488372093026,
+          "pass": false,
+          "trace_score": 0.782359322116826,
+          "\u0394_NI_backlog_f": 0.1,
+          "\u0394_NI_trace_f": 0.05
+        }
+      }
+    }
+  }
+}

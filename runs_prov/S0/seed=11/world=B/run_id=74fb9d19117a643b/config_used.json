@@ -1,0 +1,549 @@
+{
+  "code_hash": "aaa4af82ddb97d3b447ef958a12747efb1a340f3e6e6f4cd073b2e2f749de2a6",
+  "config": {
+    "DEBUG_ONLY": {
+      "ifs": {
+        "bounds": {
+          "DVP": {
+            "C": [
+              0.0,
+              10.0
+            ],
+            "D": [
+              0.0,
+              10.0
+            ],
+            "F": [
+              0.0,
+              5.0
+            ],
+            "L": [
+              0.0,
+              50.0
+            ],
+            "Q": [
+              0.0,
+              5000.0
+            ],
+            "R": [
+              0.0,
+              5.0
+            ]
+          },
+          "PVP": {
+            "C": [
+              0.0,
+              10.0
+            ],
+            "D": [
+              0.0,
+              10.0
+            ],
+            "F": [
+              0.0,
+              5.0
+            ],
+            "L": [
+              0.0,
+              50.0
+            ],
+            "Q": [
+              0.0,
+              5000.0
+            ],
+            "R": [
+              0.0,
+              5.0
+            ]
+          },
+          "XBPAY": {
+            "C": [
+              0.0,
+              10.0
+            ],
+            "D": [
+              0.0,
+              10.0
+            ],
+            "F": [
+              0.0,
+              5.0
+            ],
+            "L": [
+              0.0,
+              50.0
+            ],
+            "Q": [
+              0.0,
+              5000.0
+            ],
+            "R": [
+              0.0,
+              5.0
+            ]
+          }
+        },
+        "flow_weights": {
+          "v_DVP": 0.3,
+          "v_PVP": 0.3,
+          "v_XBPAY": 0.4
+        },
+        "phi": {
+          "C": {
+            "fee_weight": 0.6,
+            "ops_weight": 0.4
+          },
+          "D": {
+            "checkpoints_weight": 0.5,
+            "repair_weight": 0.3,
+            "rescreen_weight": 0.2
+          },
+          "F": {
+            "cycle_weight": 0.2,
+            "fail_weight": 0.3,
+            "liqreq_weight": 0.2,
+            "spread_weight": 0.3
+          },
+          "L": {
+            "median_weight": 0.3,
+            "p90_weight": 0.7
+          },
+          "Q": {
+            "coll_weight": 0.2,
+            "liq_weight": 0.8
+          },
+          "R": {
+            "drop_weight": 0.2,
+            "fail_weight": 0.3,
+            "rec_weight": 0.1,
+            "unavail_weight": 0.4
+          }
+        },
+        "weights": {
+          "w_C": 0.2,
+          "w_D": 0.2,
+          "w_F": 0.1,
+          "w_L": 0.2,
+          "w_Q": 0.2,
+          "w_R": 0.1
+        }
+      },
+      "ni": {
+        "alpha_ci": 0.05,
+        "margins": {
+          "\u0394_NI_backlog_f": 0.1,
+          "\u0394_NI_fin_f": 0.02,
+          "\u0394_NI_ops_f": 0.2,
+          "\u0394_NI_rec_f": 20.0,
+          "\u0394_NI_trace_f": 0.05,
+          "\u03b5_atomic_f": 0.001
+        },
+        "phi_rec": 0.9
+      },
+      "params": {
+        "J_het": 0.5,
+        "cap_ops": 2,
+        "ctl_int": 0.5,
+        "demand": {
+          "DVP_rate": 0.15,
+          "PVP_rate": 0.15,
+          "XBPAY_rate": 0.2
+        },
+        "fee_A": 1.0,
+        "fee_B": 0.5,
+        "fx": {
+          "p_fx_DVP": 0.2,
+          "p_fx_XBPAY": 0.7
+        },
+        "k_cost_exc": 1.0,
+        "k_cost_rep": 0.1,
+        "k_cost_retry": 0.5,
+        "line_intra": 1000.0,
+        "p_adopt": 0.0,
+        "p_commit_fail": 0.01,
+        "p_exc": 0.05,
+        "p_out": 0.01,
+        "population": {
+          "n_agents": 20,
+          "n_jurisdictions": 3
+        },
+        "q_sem": 0.8,
+        "req_change": 0.1,
+        "san_scope": 0.1,
+        "tau_out_mean": 15.0,
+        "tau_rep_mean": 8.0,
+        "tau_srv_A_mean": 5.0,
+        "tau_srv_B_mean": 2.0
+      },
+      "run": {
+        "N_runs_min": 2,
+        "T_total": 200.0,
+        "T_warm": 0.0,
+        "dt_bucket": 10.0
+      },
+      "scenario_windows": {
+        "S1": {
+          "t_end": 120.0,
+          "t_start": 60.0
+        },
+        "S2": {
+          "t_end": 160.0,
+          "t_start": 80.0
+        }
+      },
+      "shocks": {
+        "O1": {
+          "p_out": 2.0,
+          "tau_out_mean": 1.5,
+          "tau_srv_mean": 1.3
+        },
+        "O2": {
+          "line_intra": 0.6,
+          "locks": 1.4
+        },
+        "O3": {
+          "holds": 1.4,
+          "p_exc": 1.6,
+          "q_sem": 0.85,
+          "req_change": 2.0,
+          "tau_rep_mean": 1.4
+        },
+        "O4": {
+          "reroute_fail": 1.4,
+          "san_scope": 3.0
+        }
+      }
+    },
+    "ifs": {
+      "bounds": {
+        "DVP": {
+          "C": {
+            "max": 10.0,
+            "min": 0.0
+          },
+          "D": {
+            "max": 10.0,
+            "min": 0.0
+          },
+          "F": {
+            "max": 5.0,
+            "min": 0.0
+          },
+          "L": {
+            "max": 50.0,
+            "min": 0.0
+          },
+          "Q": {
+            "max": 5000.0,
+            "min": 0.0
+          },
+          "R": {
+            "max": 5.0,
+            "min": 0.0
+          }
+        },
+        "PVP": {
+          "C": {
+            "max": 10.0,
+            "min": 0.0
+          },
+          "D": {
+            "max": 10.0,
+            "min": 0.0
+          },
+          "F": {
+            "max": 5.0,
+            "min": 0.0
+          },
+          "L": {
+            "max": 50.0,
+            "min": 0.0
+          },
+          "Q": {
+            "max": 5000.0,
+            "min": 0.0
+          },
+          "R": {
+            "max": 5.0,
+            "min": 0.0
+          }
+        },
+        "XBPAY": {
+          "C": {
+            "max": 10.0,
+            "min": 0.0
+          },
+          "D": {
+            "max": 10.0,
+            "min": 0.0
+          },
+          "F": {
+            "max": 5.0,
+            "min": 0.0
+          },
+          "L": {
+            "max": 50.0,
+            "min": 0.0
+          },
+          "Q": {
+            "max": 5000.0,
+            "min": 0.0
+          },
+          "R": {
+            "max": 5.0,
+            "min": 0.0
+          }
+        }
+      },
+      "flow_weights": {
+        "v_DVP": 0.3,
+        "v_PVP": 0.3,
+        "v_XBPAY": 0.4
+      },
+      "phi": {
+        "C": {
+          "fee_weight": 0.6,
+          "ops_weight": 0.4
+        },
+        "D": {
+          "checkpoints_weight": 0.5,
+          "repair_weight": 0.3,
+          "rescreen_weight": 0.2
+        },
+        "F": {
+          "cycle_weight": 0.2,
+          "fail_weight": 0.3,
+          "liqreq_weight": 0.2,
+          "spread_weight": 0.3
+        },
+        "L": {
+          "median_weight": 0.3,
+          "p90_weight": 0.7
+        },
+        "Q": {
+          "coll_weight": 0.2,
+          "liq_weight": 0.8
+        },
+        "R": {
+          "drop_weight": 0.2,
+          "fail_weight": 0.3,
+          "rec_weight": 0.1,
+          "unavail_weight": 0.4
+        }
+      },
+      "weights": {
+        "w_C": 0.2,
+        "w_D": 0.2,
+        "w_F": 0.1,
+        "w_L": 0.2,
+        "w_Q": 0.2,
+        "w_R": 0.1
+      }
+    },
+    "meta": {
+      "flows": [
+        "XBPAY",
+        "PVP",
+        "DVP"
+      ],
+      "ifs_components": [
+        "L",
+        "C",
+        "Q",
+        "D",
+        "R",
+        "F"
+      ],
+      "spec": "SpecPack v1.0"
+    },
+    "ni": {
+      "alpha_ci": 0.05,
+      "margins": {
+        "\u0394_NI_backlog_f": 0.1,
+        "\u0394_NI_fin_f": 0.02,
+        "\u0394_NI_ops_f": 0.2,
+        "\u0394_NI_rec_f": 20.0,
+        "\u0394_NI_trace_f": 0.05,
+        "\u03b5_atomic_f": 0.001
+      },
+      "phi_rec": 0.9
+    },
+    "params": {
+      "J_het": 0.5,
+      "cap_ops": 2,
+      "ctl_int": 0.5,
+      "demand": {
+        "DVP_rate": 0.15,
+        "PVP_rate": 0.15,
+        "XBPAY_rate": 0.2
+      },
+      "fee_A": 1.0,
+      "fee_B": 0.5,
+      "fx": {
+        "p_fx_DVP": 0.2,
+        "p_fx_XBPAY": 0.7
+      },
+      "k_cost_exc": 1.0,
+      "k_cost_rep": 0.1,
+      "k_cost_retry": 0.5,
+      "line_intra": 1000.0,
+      "liq_buf_policy": "neutral",
+      "p_adopt": 1.0,
+      "p_commit_fail": 0.01,
+      "p_exc": 0.05,
+      "p_out": 0.01,
+      "population": {
+        "assets": [
+          "ASSET1"
+        ],
+        "ccys": [
+          "USD",
+          "EUR"
+        ],
+        "n_agents": 20,
+        "n_jurisdictions": 3
+      },
+      "q_sem": 0.8,
+      "req_change": 0.1,
+      "san_scope": 0.1,
+      "tau_out": {
+        "dist": "exp",
+        "mean": 15.0
+      },
+      "tau_rep": {
+        "dist": "exp",
+        "mean": 8.0
+      },
+      "tau_srv_A": {
+        "dist": "exp",
+        "mean": 5.0
+      },
+      "tau_srv_B": {
+        "dist": "exp",
+        "mean": 2.0
+      }
+    },
+    "repro": {
+      "allow_debug_defaults": true,
+      "code_commit": "UNKNOWN",
+      "git_commit": "9e06d531df5a2f1f6256b2d670ef12a20f2d6527",
+      "git_dirty": true,
+      "run_id_salt": "SpecPack-v1.0",
+      "runtime": {
+        "platform": "macOS-15.3-x86_64-i386-64bit",
+        "python_version": "3.9.6"
+      }
+    },
+    "run": {
+      "N_runs_min": 2,
+      "T_total": 200.0,
+      "T_warm": 0.0,
+      "dt_bucket": 10.0
+    },
+    "scenarios": {
+      "S0": {
+        "shocks": []
+      },
+      "S1": {
+        "shocks": [
+          {
+            "id": "O1",
+            "t_end": 120.0,
+            "t_start": 60.0
+          },
+          {
+            "id": "O2",
+            "t_end": 120.0,
+            "t_start": 60.0
+          },
+          {
+            "id": "O3",
+            "t_end": 120.0,
+            "t_start": 60.0
+          }
+        ]
+      },
+      "S2": {
+        "shocks": [
+          {
+            "id": "O1",
+            "severity": "severe",
+            "t_end": 160.0,
+            "t_start": 80.0
+          },
+          {
+            "id": "O2",
+            "severity": "severe",
+            "t_end": 160.0,
+            "t_start": 80.0
+          },
+          {
+            "id": "O4",
+            "t_end": 160.0,
+            "t_start": 80.0
+          }
+        ]
+      }
+    },
+    "shocks": {
+      "O1": {
+        "desc": "Operativo",
+        "mult": {
+          "p_out": 2.0,
+          "tau_out_mean": 1.5,
+          "tau_srv_mean": 1.3
+        }
+      },
+      "O2": {
+        "desc": "Liquidez",
+        "force_liq_buf_policy": "conservative",
+        "mult": {
+          "line_intra": 0.6,
+          "locks": 1.4
+        }
+      },
+      "O3": {
+        "desc": "Regulatorio/Sem\u00e1ntico",
+        "mult": {
+          "holds": 1.4,
+          "p_exc": 1.6,
+          "q_sem": 0.85,
+          "req_change": 2.0,
+          "tau_rep_mean": 1.4
+        }
+      },
+      "O4": {
+        "desc": "Geopol\u00edtico/De-risking",
+        "mult": {
+          "reroute_fail": 1.4,
+          "san_scope": 3.0
+        }
+      }
+    }
+  },
+  "flows": [
+    "XBPAY",
+    "PVP",
+    "DVP"
+  ],
+  "git_commit": "9e06d531df5a2f1f6256b2d670ef12a20f2d6527",
+  "git_dirty": true,
+  "ifs_components": [
+    "L",
+    "C",
+    "Q",
+    "D",
+    "R",
+    "F"
+  ],
+  "run_id": "74fb9d19117a643b",
+  "runtime": {
+    "platform": "macOS-15.3-x86_64-i386-64bit",
+    "python_version": "3.9.6"
+  },
+  "scenario": "S0",
+  "seed": 11,
+  "spec": "SpecPack v1.0",
+  "theta_hash": "0caf0e1205f80027d1c3e4745c54466b20becda8d3aafe3801fa2757624c748d",
+  "world": "B"
+}
