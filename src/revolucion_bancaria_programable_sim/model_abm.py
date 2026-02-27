@@ -7,9 +7,11 @@ ABM layer:
 """
 
 from __future__ import annotations
-from dataclasses import dataclass, asdict
-from typing import Dict, List, Any, Optional, Tuple
+
 import math
+from dataclasses import dataclass
+from typing import Any, Dict, List, Optional, Tuple
+
 import numpy as np
 
 from .rng import CRN

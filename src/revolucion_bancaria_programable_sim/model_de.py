@@ -9,14 +9,16 @@ This is a minimal runnable scaffold; extend pipelines as your thesis requires.
 """
 
 from __future__ import annotations
-from dataclasses import dataclass
-from typing import Dict, Any, List, Optional, Tuple
-import math
-import simpy
-import numpy as np
 
-from .rng import CRN
+import math
+from dataclasses import dataclass
+from typing import Any, Dict, List, Optional, Tuple
+
+import numpy as np
+import simpy
+
 from .model_abm import Agent, TxIntent
+from .rng import CRN
 
 
 def clip01(x: float) -> float:

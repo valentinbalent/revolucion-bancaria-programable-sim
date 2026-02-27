@@ -8,13 +8,13 @@ import csv
 import hashlib
 import json
 import os
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Tuple
 
 from revolucion_bancaria_programable_sim.config import build_config, stable_hash_dict
-from revolucion_bancaria_programable_sim.rng import CRN
+from revolucion_bancaria_programable_sim.metrics import build_kpi_run
 from revolucion_bancaria_programable_sim.model_abm import build_agents, generate_tx_intents
 from revolucion_bancaria_programable_sim.model_de import DESim, qa_gates
-from revolucion_bancaria_programable_sim.metrics import build_kpi_run
+from revolucion_bancaria_programable_sim.rng import CRN
 
 
 def compute_code_hash(paths: List[str]) -> str:
