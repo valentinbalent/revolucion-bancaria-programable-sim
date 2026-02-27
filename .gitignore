@@ -27,3 +27,6 @@ outputs/
 .DS_Store
 .vscode/
 .idea/
+
+# Local run artifacts
+runs_prov/
