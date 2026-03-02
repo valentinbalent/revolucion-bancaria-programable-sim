@@ -30,3 +30,4 @@ outputs/
 
 # Local run artifacts
 runs_prov/
+runs_hashcheck/
