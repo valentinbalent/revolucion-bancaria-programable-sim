@@ -76,6 +76,7 @@ def main() -> int:
     dt_bucket = float(run.get("dt_bucket", 0.0))
     N_runs_min = int(run.get("N_runs_min", 0))
     seeds = run.get("seeds", [])
+    p_commit_fail = float(cfg.get("params", {}).get("p_commit_fail", 0.0))
 
     if not (T_total > 0 and 0 <= T_warm < T_total):
         print(f"[FAIL] Invalid run horizon: T_total={T_total}, T_warm={T_warm}", file=sys.stderr)
@@ -89,27 +90,58 @@ def main() -> int:
     if len(seeds) < N_runs_min:
         print(f"[FAIL] len(seeds)={len(seeds)} < N_runs_min={N_runs_min}", file=sys.stderr)
         return 1
+    if p_commit_fail <= 0.0:
+        print(f"[FAIL] params.p_commit_fail must be > 0 for NI realism (got {p_commit_fail})", file=sys.stderr)
+        return 1
 
     # shock windows sanity (if present)
     scenarios = cfg.get("scenarios", {})
     for scen_id in ("S1", "S2"):
         scen = scenarios.get(scen_id, {})
         win = scen.get("shock_window", scen.get("shock_windows"))
+        windows = []
         if isinstance(win, dict):
-            t_start = float(win.get("t_start", -1))
-            t_end = float(win.get("t_end", -1))
+            windows.append((f"{scen_id}", win))
+        elif isinstance(win, list):
+            windows.extend((f"{scen_id}.shock_windows[{i}]", w) for i, w in enumerate(win) if isinstance(w, dict))
+        for i, shock in enumerate(scen.get("shocks", [])):
+            if isinstance(shock, dict) and "t_start" in shock and "t_end" in shock:
+                label = f"{scen_id}.shocks[{i}].{shock.get('id', 'unknown')}"
+                windows.append((label, shock))
+        for label, w in windows:
+            t_start = float(w.get("t_start", -1))
+            t_end = float(w.get("t_end", -1))
             if not (0 <= t_start < t_end <= T_total):
                 print(
-                    f"[FAIL] {scen_id} invalid shock window: [{t_start},{t_end}] vs T_total={T_total}",
+                    f"[FAIL] {label} invalid shock window: [{t_start},{t_end}] vs T_total={T_total}",
                     file=sys.stderr,
                 )
                 return 1
-            if t_start < T_warm:
+            if not (t_start > T_warm):
                 print(
-                    f"[FAIL] {scen_id} shock starts before warm-up ends (T_warm={T_warm})",
+                    f"[FAIL] {label} shock starts before warm-up ends (T_warm={T_warm})",
                     file=sys.stderr,
                 )
                 return 1
+
+    # Weight sums
+    ifs = cfg.get("ifs", {})
+    weights = ifs.get("weights", {})
+    flow_weights = ifs.get("flow_weights", {})
+    w_keys = ("w_L", "w_C", "w_Q", "w_D", "w_R", "w_F")
+    fw_keys = ("v_XBPAY", "v_PVP", "v_DVP")
+    try:
+        w_sum = sum(float(weights[k]) for k in w_keys)
+        fw_sum = sum(float(flow_weights[k]) for k in fw_keys)
+    except (KeyError, TypeError, ValueError) as exc:
+        print(f"[FAIL] IFS weights missing or invalid: {exc}", file=sys.stderr)
+        return 1
+    if abs(w_sum - 1.0) > 1e-6:
+        print(f"[FAIL] ifs.weights must sum to 1 (got {w_sum})", file=sys.stderr)
+        return 1
+    if abs(fw_sum - 1.0) > 1e-6:
+        print(f"[FAIL] ifs.flow_weights must sum to 1 (got {fw_sum})", file=sys.stderr)
+        return 1
 
     # Belt-and-suspenders: scan every node in the resolved config.
     found: List[str] = []

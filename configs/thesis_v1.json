@@ -25,16 +25,16 @@
   "scenarios": {
     "S1": {
       "shocks": [
-        {"id": "O1", "t_start": 100.0, "t_end": 250.0},
-        {"id": "O2", "t_start": 100.0, "t_end": 250.0},
-        {"id": "O3", "t_start": 100.0, "t_end": 250.0}
+        {"id": "O1", "t_start": 120.0, "t_end": 220.0},
+        {"id": "O2", "t_start": 120.0, "t_end": 220.0},
+        {"id": "O3", "t_start": 120.0, "t_end": 220.0}
       ]
     },
     "S2": {
       "shocks": [
-        {"id": "O1", "severity": "severe", "t_start": 150.0, "t_end": 350.0},
-        {"id": "O2", "severity": "severe", "t_start": 150.0, "t_end": 350.0},
-        {"id": "O4", "t_start": 150.0, "t_end": 350.0}
+        {"id": "O1", "severity": "severe", "t_start": 300.0, "t_end": 430.0},
+        {"id": "O2", "severity": "severe", "t_start": 300.0, "t_end": 430.0},
+        {"id": "O4", "t_start": 300.0, "t_end": 430.0}
       ]
     }
   },
@@ -58,7 +58,7 @@
     "liq_buf_policy": "neutral",
     "p_out": 0.01,
     "tau_out": {"dist": "exp", "mean": 15.0},
-    "p_commit_fail": 0.005,
+    "p_commit_fail": 0.002,
     "san_scope": 0.10,
     "req_change": 0.10,
     "demand": {
@@ -82,16 +82,17 @@
     "O1": {
       "desc": "Operativo",
       "mult": {
-        "p_out": 2.0,
-        "tau_out_mean": 1.5,
-        "tau_srv_mean": 1.3
+        "p_out": 4.0,
+        "tau_out_mean": 2.0,
+        "tau_srv_mean": 1.4,
+        "cap_ops": 0.8
       }
     },
     "O2": {
       "desc": "Liquidez",
       "mult": {
-        "line_intra": 0.60,
-        "locks": 1.40
+        "line_intra": 0.50,
+        "locks": 1.30
       },
       "force_liq_buf_policy": "conservative"
     },
@@ -99,35 +100,45 @@
       "desc": "Regulatorio/Semántico",
       "mult": {
         "req_change": 2.0,
-        "q_sem": 0.85,
-        "p_exc": 1.60,
-        "tau_rep_mean": 1.40,
-        "holds": 1.40
+        "q_sem": 0.7058823529,
+        "p_exc": 2.0,
+        "tau_rep_mean": 1.8,
+        "holds": 1.5
       }
     },
     "O4": {
       "desc": "Geopolítico/De-risking",
       "mult": {
-        "san_scope": 3.0,
-        "reroute_fail": 1.40
+        "san_scope": 2.0,
+        "reroute_fail": 1.2,
+        "route_remove_frac": 0.25,
+        "reroute_cost": 1.2,
+        "reroute_latency": 1.2
+      }
+    },
+    "ADV5": {
+      "desc": "Adversarial commit failure",
+      "mult": {
+        "p_commit_fail": 5.0
       }
     }
   },
 
   "ifs": {
     "weights": {
-      "w_L": 0.20,
-      "w_C": 0.20,
-      "w_Q": 0.20,
-      "w_D": 0.20,
-      "w_R": 0.10,
-      "w_F": 0.10
+      "w_L": 0.1666666667,
+      "w_C": 0.1666666667,
+      "w_Q": 0.1666666667,
+      "w_D": 0.1666666667,
+      "w_R": 0.1666666667,
+      "w_F": 0.1666666667
     },
     "flow_weights": {
-      "v_XBPAY": 0.40,
-      "v_PVP": 0.30,
-      "v_DVP": 0.30
+      "v_XBPAY": 0.3333333333,
+      "v_PVP": 0.3333333333,
+      "v_DVP": 0.3333333333
     },
+    "missing_component_policy": "drop_and_renormalize",
     "bounds": {
       "XBPAY": {
         "L": {"min": 0.0, "max": 50.0},
@@ -166,10 +177,10 @@
 
   "ni": {
     "margins": {
-      "Δ_NI_fin_f": 0.02,
-      "ε_atomic_f": 0.001,
-      "Δ_NI_ops_f": 0.20,
-      "Δ_NI_rec_f": 20.0,
+      "Δ_NI_fin_f": 0.0025,
+      "ε_atomic_f": 0.0,
+      "Δ_NI_ops_f": 0.05,
+      "Δ_NI_rec_f": 1.0,
       "Δ_NI_trace_f": 0.05,
       "Δ_NI_backlog_f": 0.10
     },

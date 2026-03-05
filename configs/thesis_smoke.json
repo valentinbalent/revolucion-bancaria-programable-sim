@@ -1,0 +1,32 @@
+{
+  "_comment": "SpecPack v1.0 — thesis_smoke minimal override for fast end-to-end runs.",
+
+  "repro": {
+    "allow_debug_defaults": true
+  },
+
+  "run": {
+    "T_total": 120.0,
+    "T_warm": 10.0,
+    "dt_bucket": 10.0,
+    "N_runs_min": 2,
+    "seeds": [42, 99]
+  },
+
+  "scenarios": {
+    "S1": {
+      "shocks": [
+        {"id": "O1", "t_start": 20.0, "t_end": 40.0},
+        {"id": "O2", "t_start": 20.0, "t_end": 40.0},
+        {"id": "O3", "t_start": 20.0, "t_end": 40.0}
+      ]
+    },
+    "S2": {
+      "shocks": [
+        {"id": "O1", "t_start": 60.0, "t_end": 90.0},
+        {"id": "O2", "t_start": 60.0, "t_end": 90.0},
+        {"id": "O4", "t_start": 60.0, "t_end": 90.0}
+      ]
+    }
+  }
+}

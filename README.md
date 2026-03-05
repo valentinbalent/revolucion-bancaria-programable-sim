@@ -19,6 +19,7 @@ pip install -e ".[dev]"
 All commands below assume the virtualenv is active and you are at the repo root.
 The config override `configs/thesis_v1.json` sets `allow_debug_defaults=false` and
 fully specifies every parameter (T_total=500, T_warm=50, N_runs_min=30, 30 seeds).
+Note: `thesis_v1` enforces `N_runs_min=30`; for fast end-to-end runs use `configs/thesis_smoke.json`.
 
 ### 1 — Validate the config before running
 
@@ -39,7 +40,7 @@ python scripts/run_experiment.py \
   --config-override configs/thesis_v1.json
 ```
 
-### 3 — Run S1 (concurrent operational + liquidity + regulatory stress, t∈[100,250])
+### 3 — Run S1 (concurrent operational + liquidity + regulatory stress, t∈[120,220])
 
 ```bash
 python scripts/run_experiment.py \
@@ -49,7 +50,7 @@ python scripts/run_experiment.py \
   --config-override configs/thesis_v1.json
 ```
 
-### 4 — Run S2 (severe operational + liquidity + geopolitical stress, t∈[150,350])
+### 4 — Run S2 (severe operational + liquidity + geopolitical stress, t∈[300,430])
 
 ```bash
 python scripts/run_experiment.py \
