@@ -1,0 +1,137 @@
+param_name,world,module,value_or_dist,range_low,range_high,tier,source_short,sensitivity,notes
+# === REPRODUCIBILITY (repro) ===
+repro.run_id_salt,both,config,thesis-v1.0,,,T3,protocol,N,Salt for deterministic run_id hashing (frozen)
+repro.allow_debug_defaults,both,config,false,,,T3,protocol,N,Must be false for thesis runs
+repro.seeds_ref,both,config,"[42..109] 30 seeds",,,T3,protocol,N,Frozen seed list for thesis batch
+# === RUN PROTOCOL ===
+run.T_total,both,DE,500.0,300,2000,T2,design choice,Y,Total simulation horizon (time units)
+run.T_warm,both,DE,50.0,0,200,T2,design choice,Y,Warm-up period discarded from KPIs
+run.dt_bucket,both,DE,10.0,1,60,T2,design choice,Y,Event aggregation bucket width
+run.N_runs_min,both,config,30,10,200,T3,protocol,N,Minimum seeds per scenario (thesis)
+# === ADOPTION (Two-Worlds) ===
+params.p_adopt,A,ABM,0.0,0,1,T3,protocol,N,World A baseline — no adoption
+params.p_adopt,B,ABM,1.0,0,1,T3,protocol,N,World B — full adoption of new protocol
+# === AGENT POPULATION ===
+params.population.n_agents,both,ABM,50,10,500,T2,design choice,Y,Number of synthetic bank agents
+params.population.n_jurisdictions,both,ABM,4,2,10,T2,design choice,Y,Number of jurisdictions
+params.population.ccys,both,ABM,"[USD, EUR]",,,T3,design choice,N,Currencies in simulation
+params.population.assets,both,ABM,"[ASSET1]",,,T3,design choice,N,Assets for DVP
+# === HETEROGENEITY / COMPLIANCE ===
+params.J_het,both,ABM,0.5,0.1,1.0,T2,estimated,Y,Jurisdiction heterogeneity factor
+params.ctl_int,both,ABM,0.5,0.1,1.0,T2,estimated,Y,AML/KYC control intensity
+# === SERVICE / LATENCY ===
+params.tau_srv_A,A,DE,"Exp(mean=5.0)",1.0,20.0,T2,BIS CPMI 2020,Y,Service time World A (legacy)
+params.tau_srv_B,B,DE,"Exp(mean=2.0)",0.5,10.0,T2,BIS CPMI 2020,Y,Service time World B (new protocol)
+params.cap_ops,both,DE,3,1,10,T2,estimated,Y,Manual ops capacity (concurrent repairs)
+# === FEES ===
+params.fee_A,A,DE,1.0,0.1,5.0,T2,estimated,Y,Per-tx fee World A
+params.fee_B,B,DE,0.5,0.05,3.0,T2,estimated,Y,Per-tx fee World B
+# === SEMANTICS / EXCEPTIONS / REPAIR ===
+params.q_sem,both,ABM,0.85,0.5,1.0,T2,ISO 20022 est.,Y,Baseline message semantic quality
+params.p_exc,both,DE,0.05,0.01,0.2,T2,estimated,Y,Exception probability baseline
+params.tau_rep,both,DE,"Exp(mean=8.0)",2.0,30.0,T2,estimated,Y,Repair time distribution
+params.k_cost_exc,both,metrics,1.0,0.1,5.0,T2,estimated,Y,Cost multiplier for exceptions
+params.k_cost_rep,both,metrics,0.1,0.01,1.0,T2,estimated,Y,Cost multiplier for repairs
+params.k_cost_retry,both,metrics,0.5,0.05,2.0,T2,estimated,Y,Cost multiplier for retries
+# === LIQUIDITY / BUFFERS ===
+params.line_intra,both,DE,2000.0,500,10000,T2,estimated,Y,Intraday credit line
+params.liq_buf_policy,both,DE,neutral,,,T3,protocol,N,"Buffer policy: neutral or conservative (O2 forces conservative)"
+# === OUTAGES ===
+params.p_out,both,DE,0.01,0.001,0.1,T2,estimated,Y,Outage arrival probability per time unit
+params.tau_out,both,DE,"Exp(mean=15.0)",5.0,60.0,T2,estimated,Y,Outage duration distribution
+# === COMMIT RISK ===
+params.p_commit_fail,B,DE,0.002,0.0001,0.01,T2,estimated,Y,"Atomic commit failure rate (B only, non-zero for NI realism)"
+# === SANCTIONS / GEOPOL ===
+params.san_scope,both,DE,0.1,0.01,0.5,T2,estimated,Y,Baseline sanction scope
+params.req_change,both,DE,0.1,0.01,0.5,T2,estimated,Y,Baseline requirement change rate
+# === DEMAND RATES ===
+params.demand.XBPAY_rate,both,ABM,0.2,0.05,1.0,T2,estimated,Y,XBPAY arrival rate per time unit
+params.demand.PVP_rate,both,ABM,0.15,0.05,1.0,T2,estimated,Y,PVP arrival rate per time unit
+params.demand.DVP_rate,both,ABM,0.15,0.05,1.0,T2,estimated,Y,DVP arrival rate per time unit
+# === FX FLAGS ===
+params.fx.p_fx_XBPAY,both,ABM,0.7,0.1,1.0,T2,estimated,Y,Fraction of XBPAY with FX component
+params.fx.p_fx_DVP,both,ABM,0.2,0.0,1.0,T2,estimated,Y,Fraction of DVP with FX component
+# === SHOCK MULTIPLIERS: O1 (Operativo) ===
+shocks.O1.mult.p_out,both,DE,4.0,1.5,10.0,T2,stress design,Y,Outage probability multiplier
+shocks.O1.mult.tau_out_mean,both,DE,2.0,1.2,5.0,T2,stress design,Y,Outage duration multiplier
+shocks.O1.mult.tau_srv_mean,both,DE,1.4,1.1,3.0,T2,stress design,Y,Service time multiplier
+shocks.O1.mult.cap_ops,both,DE,0.8,0.3,1.0,T2,stress design,Y,Ops capacity reduction multiplier
+# === SHOCK MULTIPLIERS: O2 (Liquidez) ===
+shocks.O2.mult.line_intra,both,DE,0.5,0.1,1.0,T2,stress design,Y,Credit line reduction multiplier
+shocks.O2.mult.locks,both,DE,1.3,1.0,3.0,T2,stress design,Y,Lock duration multiplier
+shocks.O2.force_liq_buf_policy,both,DE,conservative,,,T3,protocol,N,Forced buffer policy during O2
+# === SHOCK MULTIPLIERS: O3 (Regulatorio/Semantico) ===
+shocks.O3.mult.req_change,both,DE,2.0,1.2,5.0,T2,stress design,Y,Requirement change multiplier
+shocks.O3.mult.q_sem,both,ABM,0.7058823529,0.5,1.0,T2,stress design,Y,"Semantic quality multiplier (maps -0.25 shift)"
+shocks.O3.mult.p_exc,both,DE,2.0,1.2,5.0,T2,stress design,Y,Exception probability multiplier
+shocks.O3.mult.tau_rep_mean,both,DE,1.8,1.1,4.0,T2,stress design,Y,Repair time multiplier
+shocks.O3.mult.holds,both,DE,1.5,1.0,3.0,T2,stress design,Y,Holds duration multiplier
+# === SHOCK MULTIPLIERS: O4 (Geopolitico/De-risking) ===
+shocks.O4.mult.san_scope,both,DE,2.0,1.2,5.0,T2,stress design,Y,Sanction scope multiplier
+shocks.O4.mult.reroute_fail,both,DE,1.2,1.0,3.0,T2,stress design,Y,Reroute failure multiplier
+shocks.O4.mult.route_remove_frac,both,DE,0.25,0.0,0.5,T2,stress design,Y,Fraction of routes removed
+shocks.O4.mult.reroute_cost,both,DE,1.2,1.0,3.0,T2,stress design,Y,Reroute cost multiplier
+shocks.O4.mult.reroute_latency,both,DE,1.2,1.0,3.0,T2,stress design,Y,Reroute latency multiplier
+# === SHOCK MULTIPLIERS: ADV5 (Adversarial) ===
+shocks.ADV5.mult.p_commit_fail,B,DE,5.0,2.0,20.0,T2,stress design,Y,"Adversarial commit failure mult (not in S0/S1/S2)"
+# === IFS WEIGHTS (sum=1.0) ===
+ifs.weights.w_L,both,metrics,0.1666666667,0,1,T3,specpack,N,IFS Liquidity weight (equal 1/6)
+ifs.weights.w_C,both,metrics,0.1666666667,0,1,T3,specpack,N,IFS Cost weight
+ifs.weights.w_Q,both,metrics,0.1666666667,0,1,T3,specpack,N,IFS Quality of Collateral weight
+ifs.weights.w_D,both,metrics,0.1666666667,0,1,T3,specpack,N,IFS Discipline/Compliance weight
+ifs.weights.w_R,both,metrics,0.1666666667,0,1,T3,specpack,N,IFS Resilience weight
+ifs.weights.w_F,both,metrics,0.1666666667,0,1,T3,specpack,N,IFS Finality weight
+# === IFS FLOW WEIGHTS (sum=1.0) ===
+ifs.flow_weights.v_XBPAY,both,metrics,0.3333333333,0,1,T3,specpack,N,XBPAY flow weight (equal 1/3)
+ifs.flow_weights.v_PVP,both,metrics,0.3333333333,0,1,T3,specpack,N,PVP flow weight
+ifs.flow_weights.v_DVP,both,metrics,0.3333333333,0,1,T3,specpack,N,DVP flow weight
+# === IFS BOUNDS (design envelope from pilot calibration) ===
+ifs.bounds.XBPAY.L,both,metrics,"[0.0, 50.0]",0,100,T2,pilot calibration,N,XBPAY Liquidity bounds
+ifs.bounds.XBPAY.C,both,metrics,"[0.0, 10.0]",0,50,T2,pilot calibration,N,XBPAY Cost bounds
+ifs.bounds.XBPAY.Q,both,metrics,"[0.0, 5000.0]",0,10000,T2,pilot calibration,N,XBPAY Collateral bounds
+ifs.bounds.XBPAY.D,both,metrics,"[0.0, 10.0]",0,50,T2,pilot calibration,N,XBPAY Discipline bounds
+ifs.bounds.XBPAY.R,both,metrics,"[0.0, 5.0]",0,20,T2,pilot calibration,N,XBPAY Resilience bounds
+ifs.bounds.XBPAY.F,both,metrics,"[0.0, 5.0]",0,20,T2,pilot calibration,N,XBPAY Finality bounds
+ifs.bounds.PVP.L,both,metrics,"[0.0, 40.0]",0,100,T2,pilot calibration,N,PVP Liquidity bounds
+ifs.bounds.PVP.C,both,metrics,"[0.0, 8.0]",0,50,T2,pilot calibration,N,PVP Cost bounds
+ifs.bounds.PVP.Q,both,metrics,"[0.0, 5000.0]",0,10000,T2,pilot calibration,N,PVP Collateral bounds
+ifs.bounds.PVP.D,both,metrics,"[0.0, 10.0]",0,50,T2,pilot calibration,N,PVP Discipline bounds
+ifs.bounds.PVP.R,both,metrics,"[0.0, 5.0]",0,20,T2,pilot calibration,N,PVP Resilience bounds
+ifs.bounds.PVP.F,both,metrics,"[0.0, 5.0]",0,20,T2,pilot calibration,N,PVP Finality bounds
+ifs.bounds.DVP.L,both,metrics,"[0.0, 60.0]",0,100,T2,pilot calibration,N,DVP Liquidity bounds
+ifs.bounds.DVP.C,both,metrics,"[0.0, 10.0]",0,50,T2,pilot calibration,N,DVP Cost bounds
+ifs.bounds.DVP.Q,both,metrics,"[0.0, 5000.0]",0,10000,T2,pilot calibration,N,DVP Collateral bounds
+ifs.bounds.DVP.D,both,metrics,"[0.0, 10.0]",0,50,T2,pilot calibration,N,DVP Discipline bounds
+ifs.bounds.DVP.R,both,metrics,"[0.0, 5.0]",0,20,T2,pilot calibration,N,DVP Resilience bounds
+ifs.bounds.DVP.F,both,metrics,"[0.0, 5.0]",0,20,T2,pilot calibration,N,DVP Finality bounds
+# === IFS PHI (internal g_Z weights) ===
+ifs.phi.L.p90_weight,both,metrics,0.7,0,1,T3,specpack,N,p90 weight in Liquidity component
+ifs.phi.L.median_weight,both,metrics,0.3,0,1,T3,specpack,N,Median weight in Liquidity component
+ifs.phi.C.fee_weight,both,metrics,0.6,0,1,T3,specpack,N,Fee weight in Cost component
+ifs.phi.C.ops_weight,both,metrics,0.4,0,1,T3,specpack,N,Ops weight in Cost component
+ifs.phi.Q.liq_weight,both,metrics,0.8,0,1,T3,specpack,N,Liquidity weight in Collateral component
+ifs.phi.Q.coll_weight,both,metrics,0.2,0,1,T3,specpack,N,Collateral weight in Collateral component
+ifs.phi.D.checkpoints_weight,both,metrics,0.5,0,1,T3,specpack,N,Checkpoints weight in Discipline
+ifs.phi.D.rescreen_weight,both,metrics,0.2,0,1,T3,specpack,N,Rescreen weight in Discipline
+ifs.phi.D.repair_weight,both,metrics,0.3,0,1,T3,specpack,N,Repair weight in Discipline
+ifs.phi.R.unavail_weight,both,metrics,0.4,0,1,T3,specpack,N,Unavailability weight in Resilience
+ifs.phi.R.fail_weight,both,metrics,0.3,0,1,T3,specpack,N,Failure weight in Resilience
+ifs.phi.R.drop_weight,both,metrics,0.2,0,1,T3,specpack,N,Throughput drop weight in Resilience
+ifs.phi.R.rec_weight,both,metrics,0.1,0,1,T3,specpack,N,Recovery weight in Resilience
+ifs.phi.F.spread_weight,both,metrics,0.3,0,1,T3,specpack,N,Spread weight in Finality
+ifs.phi.F.fail_weight,both,metrics,0.3,0,1,T3,specpack,N,Failure weight in Finality
+ifs.phi.F.cycle_weight,both,metrics,0.2,0,1,T3,specpack,N,Cycle weight in Finality
+ifs.phi.F.liqreq_weight,both,metrics,0.2,0,1,T3,specpack,N,Liquidity req weight in Finality
+# === NI MARGINS (No-Inferiority) ===
+ni.margins.D_NI_fin_f,both,metrics,0.0025,0,0.01,T3,protocol,N,"Finality failure rate margin (0.25 pp)"
+ni.margins.eps_atomic_f,both,metrics,0.0,0,0.01,T3,protocol,N,Atomicity violation margin (zero tolerance)
+ni.margins.D_NI_ops_f,both,metrics,0.05,0,0.2,T3,protocol,N,"Throughput drop margin (5 pp)"
+ni.margins.D_NI_rec_f,both,metrics,1.0,0,10,T3,protocol,N,Recovery time margin (1 bucket)
+ni.margins.D_NI_trace_f,both,metrics,0.05,0,0.2,T3,protocol,N,Trace score margin
+ni.margins.D_NI_backlog_f,both,metrics,0.1,0,0.5,T3,protocol,N,"Backlog ratio margin (10%)"
+ni.phi_rec,both,metrics,0.9,0.5,1.0,T3,protocol,N,Recovery threshold
+ni.alpha_ci,both,metrics,0.05,0.01,0.1,T3,protocol,N,CI significance level
+# === SCENARIO WINDOWS (thesis_v1) ===
+scenarios.S0.shocks,both,DE,"[]",,,T3,protocol,N,Baseline — no shocks
+scenarios.S1.window,both,DE,"[120.0, 220.0]",,,T3,DECISIONS.md,N,"S1: concurrent O1+O2+O3"
+scenarios.S2.window,both,DE,"[300.0, 430.0]",,,T3,DECISIONS.md,N,"S2: severe O1+O2+O4"

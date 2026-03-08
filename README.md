@@ -1,11 +1,11 @@
-# Revolución Bancaria Programable — Simulation (ABM/DE)
+# Revolucion Bancaria Programable — Simulation (ABM/DE)
 
-Repo reproducible para simulación A/B (Mundo A vs Mundo B) con:
-- DE (SimPy) + policies tipo ABM
-- CRN (Common Random Numbers) para A/B pareado por seed
-- Artifacts por corrida: tx_log.csv, event_log.csv, kpi_run.json, config_used.json
+Reproducible A/B simulation (Mundo A vs Mundo B) with:
+- DE (SimPy) + ABM-style policies
+- CRN (Common Random Numbers) for paired A/B variance reduction
+- Artifacts per run: `tx_log.csv`, `event_log.csv`, `kpi_run.json`, `config_used.json`
 
-## Quickstart (macOS)
+## Quickstart
 
 ```bash
 python3 -m venv .venv
@@ -14,102 +14,136 @@ python -m pip install --upgrade pip
 pip install -e ".[dev]"
 ```
 
-## Running the Thesis Experiment (thesis_v1)
-
-All commands below assume the virtualenv is active and you are at the repo root.
-The config override `configs/thesis_v1.json` sets `allow_debug_defaults=false` and
-fully specifies every parameter (T_total=500, T_warm=50, N_runs_min=30, 30 seeds).
-Note: `thesis_v1` enforces `N_runs_min=30`; for fast end-to-end runs use `configs/thesis_smoke.json`.
-
-### 1 — Validate the config before running
+Verify installation:
 
 ```bash
-python scripts/validate_config.py configs/thesis_v1.json
+ruff check .
+pytest -q
 ```
 
-Expected output: `[OK] Config is valid — no placeholders, all constraints satisfied.`
-Exit 1 means a placeholder or constraint violation was found; fix before proceeding.
+## Smoke Test (< 1 min)
 
-### 2 — Run S0 (baseline, no shocks)
+Fast end-to-end validation with 2 seeds, T_total=120, compressed shock windows.
 
 ```bash
+# Validate config
+python scripts/validate_config.py configs/thesis_smoke.json
+
+# Run S0 (baseline) + S2 (severe stress)
+python scripts/run_experiment.py \
+  --scenario S0 --seeds 42 99 \
+  --runs-root runs_smoke \
+  --config-override configs/thesis_smoke.json
+
+python scripts/run_experiment.py \
+  --scenario S2 --seeds 42 99 \
+  --runs-root runs_smoke \
+  --config-override configs/thesis_smoke.json
+
+# Aggregate
+python scripts/aggregate_results.py \
+  --runs-root runs_smoke --results-root results/smoke
+```
+
+## Pilot Run
+
+Automated pipeline that runs experiments, aggregates, and builds a results pack
+with `PILOT_REPORT.md` and `RUN_META.json`.
+
+```bash
+# Default: thesis_pilot.json (or thesis_smoke.json), S0+S2, seeds 42 99
+python scripts/run_pilot.py
+
+# Custom options
+python scripts/run_pilot.py \
+  --config configs/thesis_smoke.json \
+  --scenarios S0 S1 S2 \
+  --seeds 42 99 \
+  --runs-root runs/pilot \
+  --results-root results/pilot
+```
+
+Outputs in `results/pilot/`:
+
+| File | Contents |
+|------|----------|
+| `kpi_aggregate.csv` | Run-level flat KPIs |
+| `paired_seed_level.csv` | A/B paired deltas per seed |
+| `T1_KPIs_core_AvsB.csv` | Core KPIs (A vs B) |
+| `T2_IFS_components.csv` | IFS component scores |
+| `T3_NI.csv` | No-inferiority verdicts |
+| `PILOT_REPORT.md` | Summary report |
+| `RUN_META.json` | Full reproducibility metadata |
+| `manifest_sha256.json` | SHA-256 integrity checksums |
+
+## Thesis Batch (thesis_v1)
+
+Full run: 30 seeds, T_total=500, 3 scenarios. Uses `configs/thesis_v1.json`
+with `allow_debug_defaults=false` (all parameters explicitly set).
+
+```bash
+# 1 — Validate
+python scripts/validate_config.py configs/thesis_v1.json
+
+# 2 — Run S0 (baseline)
 python scripts/run_experiment.py \
   --scenario S0 \
   --seeds 42 123 456 789 1337 2026 7 11 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 83 89 97 101 103 107 109 \
   --runs-root runs \
   --config-override configs/thesis_v1.json
-```
 
-### 3 — Run S1 (concurrent operational + liquidity + regulatory stress, t∈[120,220])
-
-```bash
+# 3 — Run S1 (concurrent O1+O2+O3, t in [120,220])
 python scripts/run_experiment.py \
   --scenario S1 \
   --seeds 42 123 456 789 1337 2026 7 11 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 83 89 97 101 103 107 109 \
   --runs-root runs \
   --config-override configs/thesis_v1.json
-```
 
-### 4 — Run S2 (severe operational + liquidity + geopolitical stress, t∈[300,430])
-
-```bash
+# 4 — Run S2 (severe O1+O2+O4, t in [300,430])
 python scripts/run_experiment.py \
   --scenario S2 \
   --seeds 42 123 456 789 1337 2026 7 11 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 83 89 97 101 103 107 109 \
   --runs-root runs \
   --config-override configs/thesis_v1.json
-```
 
-### 5 — Aggregate all scenarios into results tables
-
-```bash
+# 5 — Aggregate
 python scripts/aggregate_results.py \
-  --runs-root runs \
-  --results-root results
+  --runs-root runs --results-root results
+
+# 6 — Results pack
+python scripts/make_results_pack.py \
+  --results-dir results --label thesis_v1
 ```
 
-Output files written to `results/`:
+## Exact Reproducibility
 
-| File | Contents |
-|------|----------|
-| `kpi_aggregate.csv` | Run-level flat KPIs (all scenarios, both worlds) |
-| `paired_seed_level.csv` | A/B paired deltas per seed |
-| `table_5_2_kpis_xbpay.csv` | XBPAY KPIs — median / p10 / p90 per scenario |
-| `table_5_3_kpis_pvp_dvp.csv` | PVP + DVP KPIs — median / p10 / p90 per scenario |
-| `table_5_4_ifs.csv` | IFS scores per flow and component per scenario |
-| `table_5_5_no_inferiority.csv` | NI-1 / NI-2 / NI-3 pass rates per flow and scenario |
+Every run is fingerprinted for full traceability:
 
-To aggregate a single scenario only (e.g. during iterative runs):
+| Artifact | Description |
+|----------|-------------|
+| `run_id` | `SHA256(salt \| scenario \| seed \| world \| theta_hash \| git_commit \| code_hash)[:16]` |
+| `run_id_salt` | Config-level salt (e.g. `thesis-v1.0`) — changing it changes all run_ids |
+| `git_commit` | Recorded in `config_used.json` per run |
+| `code_hash` | SHA-256 of source modules (`config.py`, `rng.py`, `model_abm.py`, `model_de.py`, `metrics.py`, `run_experiment.py`) |
+| `theta_hash` | SHA-256 of the `params` dict (stable JSON serialization) |
+| `manifest_sha256.json` | File-level checksums in results pack |
 
-```bash
-python scripts/aggregate_results.py \
-  --runs-root runs \
-  --results-root results \
-  --scenario S1
-```
+To verify a run was produced by a specific code + config combination:
 
-### Optional: agent snapshot
+1. Check `config_used.json` in the run directory for `git_commit`, `code_hash`, `run_id`
+2. Recompute `run_id` from the same inputs — must match
+3. Check `manifest_sha256.json` in results for file integrity
 
-Pass `--agent-snapshot` to any `run_experiment.py` call to also write
-`agent_snapshot.csv` in each run directory.
-
-```bash
-python scripts/run_experiment.py \
-  --scenario S0 \
-  --seeds 42 \
-  --runs-root runs \
-  --config-override configs/thesis_v1.json \
-  --agent-snapshot
-```
+Config fields `run_id_salt` and `code_hash` together form the **provenance chain**.
+If any source file or parameter changes, the `run_id` changes, preventing silent drift.
 
 ## Development
 
-Run linter and tests:
-
 ```bash
 ruff check .
-pytest tests/
+pytest -q
 ```
 
 ## License
-MIT — ver LICENSE.
+
+MIT — see LICENSE.
