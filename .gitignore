@@ -31,3 +31,7 @@ outputs/
 # Local run artifacts
 runs_prov/
 runs_hashcheck/
+runs_*/
+results_*/
+runs/
+results/
