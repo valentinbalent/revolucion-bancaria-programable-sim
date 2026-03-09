@@ -70,3 +70,66 @@ The following shock keys are currently unused by the simulator and are kept for 
 - shocks.O4.mult.reroute_cost
 - shocks.O4.mult.reroute_latency
 - shocks.ADV5.mult.p_commit_fail
+
+## IFS sign-convention audit (2026-03-08)
+
+All six g_Z components {L, C, Q, D, R, F} follow the convention:
+**higher raw value = more fragmentation = worse**.
+
+| Component | KPIs used | Orientation | Status |
+|-----------|-----------|-------------|--------|
+| L | K1_latency_p90, K1_latency_median | higher = worse | CORRECT |
+| C | K2_fee_mean, K2_ops_proxy_mean | higher = worse | CORRECT |
+| Q | K3_liq_lock_exposure_mean, K3_coll_lock_exposure_mean | higher = worse | CORRECT |
+| D | K4_checkpoints_mean, K4_rescreen_rate, K4_repair_due_missing_rate | higher = worse | CORRECT |
+| R | 1-availability, K5_op_fail_rate, K5_throughput_drop, K5_recovery_time | higher = worse | CORRECT |
+| F | K6_spread_proxy, K6_fail_rate, K6_cycle_time_p90, K6_multi_ccy_liq_req_mean | higher = worse | CORRECT |
+
+**STP_rate and trace_score**: AUX KPIs that do NOT enter any g_Z component.
+They appear only in NI-3 checks with correct orientation handling
+(trace >= threshold; backlog = 1 - STP_rate).
+If they are ever added to a fragmentation component, they must be inverted
+(e.g., `1 - STP_rate`) to maintain the convention.
+
+No code changes were required by this audit.  Monotonicity QA tests added
+in `tests/test_monotonicity.py`.
+
+## Config usage policy
+
+| Config file | Purpose | Use for thesis results? |
+|-------------|---------|------------------------|
+| `configs/thesis_smoke.json` | Fast CI/smoke test (T_total=120, 2 seeds) | NO |
+| `configs/thesis_pilot.json` | Pilot envelope / bounds calibration (T_total=500, 2 seeds) | NO |
+| `configs/thesis_v1.json` | Final thesis batch (T_total=500, 30 seeds) | **YES** |
+
+Only `thesis_v1.json` with calibrated bounds from the pilot envelope run
+is used for citable thesis results.
+
+## Bounds calibration procedure (pilot + manual cap)
+
+1. Run pilot: `python scripts/run_pilot.py --config configs/thesis_pilot.json`
+2. Extract bounds: `python scripts/extract_pilot_bounds.py --runs-root runs_pilot`
+3. Per flow {XBPAY, PVP, DVP} and component Z in {L, C, Q, D, R, F}:
+   a. Compute p01 and p99 of Z_raw across all pilot kpi_run.json files.
+   b. Expand by 20%: z_min = max(0, p01 * 0.8), z_max = p99 * 1.2.
+   c. Set ifs.bounds.<flow>.<Z>.min/max in thesis_v1.json.
+4. Minimal manual review: only adjust if clipping is absurd or economically inconsistent.
+5. Document every manual revision in the "Manual bounds caps" section below.
+6. Validate: `python scripts/validate_config.py configs/thesis_v1.json`
+7. Once frozen, do NOT touch bounds again before final batch unless there is a real bug.
+
+## Manual bounds caps (thesis_v1)
+
+| Flow | Component | Original z_max | Capped z_max | Reason |
+|------|-----------|---------------|--------------|--------|
+| _(to be filled after pilot)_ | | | | |
+
+## Non-final results notice
+
+Results from smoke runs and pilot envelope runs are NOT thesis outputs.
+They serve only for pipeline validation and bounds calibration.
+Any results produced before the sign-convention audit and bounds freeze
+(including any previous `results_thesis_v1_1/` artifacts) are preliminary
+and must NOT appear in the thesis document.  Only the final thesis batch
+(30 seeds, calibrated bounds, frozen thesis_v1.json) constitutes the
+citable result set.

@@ -21,6 +21,51 @@ ruff check .
 pytest -q
 ```
 
+## End-to-End Workflow (Thesis Pipeline)
+
+The complete sequence from setup to thesis-ready results:
+
+| Step | Description | Config | Citable? |
+|------|-------------|--------|----------|
+| 1 | Install & verify | — | — |
+| 2 | Smoke test (< 1 min) | `thesis_smoke.json` | NO |
+| 3 | Pilot envelope run (2 seeds) | `thesis_pilot.json` | NO |
+| 4 | Extract & freeze design-envelope bounds | — | — |
+| 5 | Final thesis batch (30 seeds, S0+S1+S2) | `thesis_v1.json` | **YES** |
+| 6 | Aggregate & results pack | — | — |
+
+```bash
+# Step 1 — Install (see Quickstart above)
+
+# Step 2 — Smoke test
+python scripts/validate_config.py configs/thesis_smoke.json
+python scripts/run_experiment.py --scenario S0 --seeds 42 99 --runs-root runs_smoke --config-override configs/thesis_smoke.json
+python scripts/run_experiment.py --scenario S2 --seeds 42 99 --runs-root runs_smoke --config-override configs/thesis_smoke.json
+python scripts/aggregate_results.py --runs-root runs_smoke --results-root results/smoke
+
+# Step 3 — Pilot envelope
+python scripts/run_pilot.py --config configs/thesis_pilot.json --runs-root runs_pilot --results-root results_pilot
+
+# Step 4 — Extract bounds and freeze into thesis_v1.json
+python scripts/extract_pilot_bounds.py --runs-root runs_pilot --output calibration/design_envelope_bounds.json
+# Review calibration/design_envelope_bounds.json, copy z_min/z_max into thesis_v1.json
+python scripts/validate_config.py configs/thesis_v1.json
+
+# Step 5 — Final thesis batch
+for SCEN in S0 S1 S2; do
+  python scripts/run_experiment.py --scenario $SCEN \
+    --seeds 42 123 456 789 1337 2026 7 11 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 83 89 97 101 103 107 109 \
+    --runs-root runs --config-override configs/thesis_v1.json
+done
+
+# Step 6 — Aggregate & results pack
+python scripts/aggregate_results.py --runs-root runs --results-root results
+python scripts/make_results_pack.py --results-dir results --label thesis_v1
+```
+
+See `docs/DECISIONS.md` for frozen parameter details and `docs/CALIBRATION.md` for the
+bounds procedure.
+
 ## Smoke Test (< 1 min)
 
 Fast end-to-end validation with 2 seeds, T_total=120, compressed shock windows.

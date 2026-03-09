@@ -210,7 +210,30 @@ def compute_kpis(cfg: Dict[str, Any], tx_rows: List[Dict[str, Any]], event_rows:
 
 def g_Z_scalar(cfg: Dict[str, Any], flow: str, comp: str, flow_k: Dict[str, Any]) -> float:
     """
-    FIX 3: each component returns a scalar, via fixed ex ante phi weights.
+    Compute the raw g_Z scalar for one IFS component.
+
+    SIGN CONVENTION (audited 2026-03-08, frozen for thesis v1.1):
+      All six components {L, C, Q, D, R, F} return values where
+      HIGHER raw value = MORE fragmentation = WORSE.
+
+      - L (Latency): weighted p90 + median latency.  Higher latency = worse.
+      - C (Cost): weighted fee + ops proxy.  Higher cost = worse.
+      - Q (Liquidity): weighted liq + coll lock exposure.  Higher lock = worse.
+      - D (Data fidelity): weighted checkpoints (friction proxy) + rescreen
+        (reserved=0) + repair_due_missing_rate.  Higher = worse.
+      - R (Resilience): weighted (1-availability) + fail_rate + throughput_drop
+        + recovery_time.  Note availability is inverted to unavailability.
+      - F (Finality): weighted spread + fail_rate + cycle_time + multi_ccy_liq.
+        Higher = worse.
+
+    STP_rate and trace_score are AUX KPIs that do NOT enter any g_Z
+    component.  They appear only in NI-3 checks (with correct orientation:
+    trace >= threshold; backlog = 1 - STP_rate).
+    If they are ever added to a g_Z component they MUST be inverted
+    (e.g., 1 - STP_rate) to maintain the "higher = worse" convention.
+
+    normalize() then maps [bounds.min, bounds.max] -> [0, 1] preserving
+    this orientation: normalized 0 = best, 1 = worst observed fragmentation.
     """
     phi = cfg["ifs"]["phi"][comp]
     if comp == "L":
@@ -244,6 +267,7 @@ def g_Z_scalar(cfg: Dict[str, Any], flow: str, comp: str, flow_k: Dict[str, Any]
 
 
 def normalize(cfg: Dict[str, Any], flow: str, comp: str, raw: float) -> float:
+    """Min-max normalize raw g_Z to [0, 1].  Preserves 'higher = worse' orientation."""
     mn = float(cfg["ifs"]["bounds"][flow][comp]["min"])
     mx = float(cfg["ifs"]["bounds"][flow][comp]["max"])
     if mx <= mn:
